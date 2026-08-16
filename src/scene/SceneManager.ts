@@ -32,6 +32,7 @@ export class SceneManager {
   private lastTimestamp: number | null = null
   private resizeReprofileTimer: ReturnType<typeof window.setTimeout> | null = null
   private renderLoopId: number | null = null
+  private disposed = false
 
   private onWindowResize = (): void => {
     this.resize(window.innerWidth, window.innerHeight)
@@ -46,6 +47,8 @@ export class SceneManager {
   }
 
   init(canvas: HTMLCanvasElement): void {
+    this.disposed = false
+
     const scene = new THREE.Scene()
     const fog = createFog()
     scene.fog = fog
@@ -137,6 +140,8 @@ export class SceneManager {
         update(dt)
       }
 
+      if (this.disposed) return
+
       if (this.postprocessing) {
         this.postprocessing.composer.render()
       } else if (this.renderer && this.scene && this.camera) {
@@ -150,6 +155,8 @@ export class SceneManager {
   }
 
   dispose(): void {
+    this.disposed = true
+
     if (this.renderLoopId !== null) {
       cancelAnimationFrame(this.renderLoopId)
       this.renderLoopId = null
