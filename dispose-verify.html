@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8" /></head>
+<body>
+<canvas id="c" width="100" height="100"></canvas>
+<script type="module">
+  import { SceneManager } from '/src/scene/SceneManager.ts'
+
+  const results = {}
+  window.__results = results
+
+  let rafCount = 0
+  let cafCount = 0
+  const originalRAF = window.requestAnimationFrame.bind(window)
+  const originalCAF = window.cancelAnimationFrame.bind(window)
+  window.requestAnimationFrame = (cb) => { rafCount++; return originalRAF(cb) }
+  window.cancelAnimationFrame = (id) => { cafCount++; return originalCAF(id) }
+
+  const canvas = document.getElementById('c')
+  const sm = new SceneManager()
+  sm.init(canvas)
+
+  await new Promise((r) => setTimeout(r, 300))
+  results.rafCountBeforeDispose = rafCount
+
+  let errorDuringDispose = null
+  try {
+    sm.dispose()
+  } catch (e) {
+    errorDuringDispose = String((e && e.stack) || e)
+  }
+  results.errorDuringDispose = errorDuringDispose
+  results.cafCountAfterDispose = cafCount
+
+  const rafRightAfterDispose = rafCount
+  await new Promise((r) => setTimeout(r, 500))
+  results.rafKeptGrowingAfterDispose = rafCount > rafRightAfterDispose
+  results.rafCountAfterWait = rafCount
+  results.rafRightAfterDispose = rafRightAfterDispose
+
+  let resizeError = null
+  try {
+    window.dispatchEvent(new Event('resize'))
+  } catch (e) {
+    resizeError = String((e && e.stack) || e)
+  }
+  results.resizeError = resizeError
+
+  await new Promise((r) => setTimeout(r, 250))
+  results.rafCountAfterResizeWait = rafCount
+
+  results.fieldsNulled = {
+    scene: sm.scene,
+    camera: sm.camera,
+    renderer: sm.renderer,
+    fog: sm.fog,
+    composer: sm.composer,
+  }
+
+  window.requestAnimationFrame = originalRAF
+  window.cancelAnimationFrame = originalCAF
+
+  results.done = true
+  document.title = 'DONE'
+</script>
+</body>
+</html>

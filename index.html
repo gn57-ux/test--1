@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>深海失物博物馆</title>
+  </head>
+  <body>
+    <!--
+      分层容器：
+      - #scene-canvas：Three.js 渲染层，全屏铺底，负责 3D 场景。
+      - #ui-root：HTML UI 层，叠加在 Canvas 之上，负责文字、交互控件等可访问内容。
+      两层职责分离，互不混渲染路径（见 .claude/rules/coding-style.md）。
+    -->
+    <canvas id="scene-canvas"></canvas>
+    <div id="ui-root"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
