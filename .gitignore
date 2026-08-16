@@ -12,6 +12,12 @@ dist
 dist-ssr
 *.local
 
+# Internal AI tooling / planning docs — not part of the shipped repo
+.claude/
+specs/
+docs/
+dispose-verify.html
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
