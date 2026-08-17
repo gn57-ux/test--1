@@ -2,13 +2,17 @@
   color-scheme: dark;
 }
 
-html,
+html {
+  width: 100%;
+  background: #000;
+}
+
 body {
   margin: 0;
   padding: 0;
   width: 100%;
-  height: 100%;
-  overflow: hidden;
+  /* 建立可滚动的总高度：滚动驱动镜头下潜（PRD F-002），后续展区依据此高度定位。 */
+  min-height: 500vh;
   background: #000;
 }
 
